@@ -276,7 +276,78 @@ function shareVideo() {
 }
 
 </script>
-<script type="module">
+<script type="module">import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+let confirmationResult;
+
+window.sendCode = async function () {
+  const phone = document.getElementById("phoneNumber").value.trim();
+  const message = document.getElementById("loginMessage");
+
+  if (!phone) {
+    message.textContent = "⚠️ Weka namba ya simu.";
+    return;
+  }
+
+  try {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "normal"
+        }
+      );
+    }
+
+    message.textContent = "⏳ Inatuma code...";
+
+    confirmationResult = await signInWithPhoneNumber(
+      auth,
+      phone,
+      window.recaptchaVerifier
+    );
+
+    document.getElementById("verificationCode").style.display = "block";
+    document.getElementById("verifyBtn").style.display = "block";
+
+    message.textContent = "✅ Code imetumwa kwenye simu yako.";
+  } catch (error) {
+    console.error(error);
+    message.textContent = "❌ Imeshindikana kutuma code: " + error.message;
+  }
+};
+
+window.verifyCode = async function () {
+  const code = document.getElementById("verificationCode").value.trim();
+  const message = document.getElementById("loginMessage");
+
+  if (!code) {
+    message.textContent = "⚠️ Weka OTP uliotumiwa.";
+    return;
+  }
+
+  try {
+    message.textContent = "⏳ Inathibitisha...";
+
+    await confirmationResult.confirm(code);
+
+    document.getElementById("loginBox").style.display = "none";
+
+    message.textContent = "✅ Umeingia Smile TV!";
+  } catch (error) {
+    console.error(error);
+    message.textContent = "❌ OTP si sahihi au imekwisha muda.";
+  }
+};
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
   import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
