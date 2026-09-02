@@ -100,284 +100,252 @@
       color: white;
       font-size: 22px;
     }
+
+    #loginBox {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      color: white;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #loginBox button {
+      padding: 15px 25px;
+      border: 0;
+      border-radius: 25px;
+      background: white;
+      color: #222;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    #loginMessage {
+      margin-top: 20px;
+      max-width: 90%;
+    }
   </style>
 </head>
 
 <body>
-<div id="loginBox" style="
-  position:fixed;
-  inset:0;
-  background:#000;
-  color:white;
-  z-index:99999;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-">
-  <h1>😊 Smile TV</h1>
-  <p>Karibu Smile TV</p>
 
-  <button onclick="googleLogin()" style="
-    padding:15px 25px;
-    border:0;
-    border-radius:25px;
-    background:white;
-    color:#222;
-    font-size:16px;
-    font-weight:bold;
-  ">
-    🔐 Ingia kwa Google
-  </button>
+  <!-- GOOGLE LOGIN -->
+  <div id="loginBox">
+    <h1>😊 Smile TV</h1>
+    <p>Karibu Smile TV</p>
 
-  <p id="loginMessage"></p>
-</div>
-  <h1>😊 Smile TV</h1>
-  <h3>Ingia kwenye Smile TV</h3>
+    <button onclick="googleLogin()">
+      🔐 Ingia kwa Google
+    </button>
 
-  <input
-    id="phoneNumber"
-    type="tel"
-    placeholder="+2557XXXXXXXX"
-    style="padding:14px;width:90%;max-width:330px;border-radius:10px;border:0;margin:10px;"
-  >
-
-  <div id="recaptcha-container"></div>
-
-  <button onclick="sendCode()" style="
-    padding:13px 25px;
-    border:0;
-    border-radius:25px;
-    background:#ff0050;
-    color:white;
-    font-weight:bold;
-    margin:10px;
-  ">
-    📩 Tuma Code
-  </button>
-
-  <input
-    id="verificationCode"
-    type="number"
-    placeholder="Ingiza OTP"
-    style="padding:14px;width:90%;max-width:330px;border-radius:10px;border:0;margin:10px;display:none;"
-  >
-
-  <button id="verifyBtn" onclick="verifyCode()" style="
-    padding:13px 25px;
-    border:0;
-    border-radius:25px;
-    background:#19c96b;
-    color:white;
-    font-weight:bold;
-    margin:10px;
-    display:none;
-  ">
-    ✅ Thibitisha
-  </button>
-
-  <p id="loginMessage"></p>
-</div>
-<div class="app">
-
-  <div class="logo">😊 Smile TV</div>
-
-  <button class="upload" onclick="uploadVideo()">
-    ⬆️ Upload
-  </button>
-
-  <div class="video-container">
-
-    <video id="mainVideo" controls autoplay loop playsinline muted></video>
-
-    <div class="info">
-      <div class="username">@SmileTV</div>
-      <div class="caption">Karibu Smile TV 🎬</div>
-    </div>
-
-    <div class="buttons">
-      <button class="action" onclick="likeVideo()">❤️</button>
-      <button class="action" onclick="commentVideo()">💬</button>
-      <button class="action" onclick="shareVideo()">↗️</button>
-    </div>
-
+    <p id="loginMessage"></p>
   </div>
 
-</div>
+  <!-- SMILE TV -->
+  <div class="app">
 
-<script>
+    <div class="logo">😊 Smile TV</div>
 
-function uploadVideo() {
+    <button class="upload" onclick="uploadVideo()">
+      ⬆️ Upload
+    </button>
 
-  cloudinary.openUploadWidget({
+    <div class="video-container">
 
-    cloudName: "hvzksa0n",
+      <video id="mainVideo" controls autoplay loop playsinline muted></video>
 
-    uploadPreset: "smile_tv",
+      <div class="info">
+        <div class="username">@SmileTV</div>
+        <div class="caption">Karibu Smile TV 🎬</div>
+      </div>
 
-    sources: ["local", "camera"],
+      <div class="buttons">
+        <button class="action" onclick="likeVideo()">❤️</button>
+        <button class="action" onclick="commentVideo()">💬</button>
+        <button class="action" onclick="shareVideo()">↗️</button>
+      </div>
 
-    multiple: false,
+    </div>
+  </div>
 
-    resourceType: "video"
+  <!-- FIREBASE -->
+  <script type="module">
 
-  }, function(error, result) {
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
-    if (!error && result && result.event === "success") {
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+const firebaseConfig = {
+apiKey: "AIzaSyCu5afNJaHts8CSUGnwJg-TgRZzHBMH0eU",
+  authDomain: "smile-tv-1d3a1.firebaseapp.com",
+  projectId: "smile-tv-1d3a1",
+  storageBucket: "smile-tv-1d3a1.firebasestorage.app",
+  messagingSenderId: "873816908067",
+  appId: "1:873816908067:web:01a899081383a74e55ec96",
+  measurementId: "G-7RH0HWGHCL"
+};
+    const app = initializeApp(firebaseConfig);
 
-      const videoUrl = result.info.secure_url;
+    const auth = getAuth(app);
 
-      const video = document.getElementById("mainVideo");
+    const provider = new GoogleAuthProvider();
 
-      video.src = videoUrl;
+    window.googleLogin = async function () {
 
-      video.muted = false;
+      const message = document.getElementById("loginMessage");
 
-      video.play();
+      try {
 
-      alert("✅ Video imepakiwa kwenye Smile TV!");
+        message.textContent = "⏳ Inaingia...";
 
-    }
+        await signInWithPopup(auth, provider);
 
-  });
+      } catch (error) {
 
-}
+        console.error(error);
 
+        message.textContent =
+          "❌ Imeshindikana kuingia: " + error.message;
 
-function likeVideo() {
+      }
 
-  alert("❤️ Ume-like video!");
+    };
 
-}
+    onAuthStateChanged(auth, (user) => {
 
+      const loginBox = document.getElementById("loginBox");
 
-function commentVideo() {
+      if (user) {
 
-  const comment = prompt("Andika comment yako:");
+        loginBox.style.display = "none";
 
-  if (comment) {
+        console.log("User ameingia:", user.email);
 
-    alert("💬 Comment yako imeongezwa!");
+      } else {
 
-  }
+        loginBox.style.display = "flex";
 
-}
-
-
-function shareVideo() {
-
-  const url = document.getElementById("mainVideo").src;
-
-  if (navigator.share) {
-
-    navigator.share({
-
-      title: "Smile TV",
-
-      text: "Tazama video hii kwenye Smile TV",
-
-      url: url
+      }
 
     });
 
-  } else {
+  </script>
 
-    navigator.clipboard.writeText(url);
 
-    alert("🔗 Link ya video imenakiliwa!");
+  <!-- CLOUDINARY + BUTTONS -->
+  <script>
 
-  }
+    function uploadVideo() {
 
-}
+      cloudinary.openUploadWidget({
 
-</script>
-<script type="module">import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import {
-  getAuth,
-  RecaptchaVerifier,
-  signInWithPhoneNumber
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+        cloudName: "hvzksa0n",
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+        uploadPreset: "smile_tv",
 
-let confirmationResult;
+        sources: ["local", "camera"],
 
-window.sendCode = async function () {
-  const phone = document.getElementById("phoneNumber").value.trim();
-  const message = document.getElementById("loginMessage");
+        multiple: false,
 
-  if (!phone) {
-    message.textContent = "⚠️ Weka namba ya simu.";
-    return;
-  }
+        resourceType: "video"
 
-  try {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "normal"
+      }, function(error, result) {
+
+        if (!error &&
+            result &&
+            result.event === "success") {
+
+          const videoUrl =
+            result.info.secure_url;
+
+          const video =
+            document.getElementById("mainVideo");
+
+          video.src = videoUrl;
+
+          video.muted = false;
+
+          video.play();
+
+          alert(
+            "✅ Video imepakiwa kwenye Smile TV!"
+          );
+
         }
-      );
+
+      });
+
     }
 
-    message.textContent = "⏳ Inatuma code...";
 
-    confirmationResult = await signInWithPhoneNumber(
-      auth,
-      phone,
-      window.recaptchaVerifier
-    );
+    function likeVideo() {
 
-    document.getElementById("verificationCode").style.display = "block";
-    document.getElementById("verifyBtn").style.display = "block";
+      alert("❤️ Ume-like video!");
 
-    message.textContent = "✅ Code imetumwa kwenye simu yako.";
-  } catch (error) {
-    console.error(error);
-    message.textContent = "❌ Imeshindikana kutuma code: " + error.message;
-  }
-};
+    }
 
-window.verifyCode = async function () {
-  const code = document.getElementById("verificationCode").value.trim();
-  const message = document.getElementById("loginMessage");
 
-  if (!code) {
-    message.textContent = "⚠️ Weka OTP uliotumiwa.";
-    return;
-  }
+    function commentVideo() {
 
-  try {
-    message.textContent = "⏳ Inathibitisha...";
+      const comment =
+        prompt("Andika comment yako:");
 
-    await confirmationResult.confirm(code);
+      if (comment) {
 
-    document.getElementById("loginBox").style.display = "none";
+        alert(
+          "💬 Comment yako imeongezwa!"
+        );
 
-    message.textContent = "✅ Umeingia Smile TV!";
-  } catch (error) {
-    console.error(error);
-    message.textContent = "❌ OTP si sahihi au imekwisha muda.";
-  }
-};
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+      }
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCu5afNJaHts8CSUGnwJg-TgRZzHBMH0eU"
-    authDomain: "smile-tv-1d3a1.firebaseapp.com",
-    projectId: "smile-tv-1d3a1",
-    storageBucket: "smile-tv-1d3a1.firebasestorage.app",
-    messagingSenderId: "873816908067",
-    appId: "1:873816908067:web:01a899081383a74e55ec96"
-  };
+    }
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-</script>
+
+    function shareVideo() {
+
+      const url =
+        document.getElementById("mainVideo").src;
+
+      if (navigator.share) {
+
+        navigator.share({
+
+          title: "Smile TV",
+
+          text:
+            "Tazama video hii kwenye Smile TV",
+
+          url: url
+
+        });
+
+      } else {
+
+        navigator.clipboard.writeText(url);
+
+        alert(
+          "🔗 Link ya video imenakiliwa!"
+        );
+
+      }
+
+    }
+
+  </script>
+
 </body>
 </html>
+
+
+Get Microsoft OneNote: https://aka.ms/GetOneNoteMobile
