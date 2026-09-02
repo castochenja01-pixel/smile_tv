@@ -218,6 +218,21 @@ function shareVideo() {
 }
 
 </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
+  const firebaseConfig = {
+    apiKey: "AIzaSyCu5afNJaHts8CSUGnwJg-TgRZzHBMH0eU"
+    authDomain: "smile-tv-1d3a1.firebaseapp.com",
+    projectId: "smile-tv-1d3a1",
+    storageBucket: "smile-tv-1d3a1.firebasestorage.app",
+    messagingSenderId: "873816908067",
+    appId: "1:873816908067:web:01a899081383a74e55ec96"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+</script>
 </body>
 </html>
