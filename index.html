@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smile TV</title>
+
+  <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .app {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    .logo {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 20;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .upload {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 30;
+      background: #ff0050;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .video-container {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #111;
+    }
+
+    .info {
+      position: absolute;
+      left: 15px;
+      bottom: 35px;
+      z-index: 10;
+      text-shadow: 0 2px 5px #000;
+    }
+
+    .username {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .caption {
+      font-size: 15px;
+    }
+
+    .buttons {
+      position: absolute;
+      right: 12px;
+      bottom: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 20;
+    }
+
+    .action {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,.5);
+      color: white;
+      font-size: 22px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="logo">😊 Smile TV</div>
+
+  <button class="upload" onclick="uploadVideo()">
+    ⬆️ Upload
+  </button>
+
+  <div class="video-container">
+
+    <video id="mainVideo" controls autoplay loop playsinline muted></video>
+
+    <div class="info">
+      <div class="username">@SmileTV</div>
+      <div class="caption">Karibu Smile TV 🎬</div>
+    </div>
+
+    <div class="buttons">
+      <button class="action" onclick="likeVideo()">❤️</button>
+      <button class="action" onclick="commentVideo()">💬</button>
+      <button class="action" onclick="shareVideo()">↗️</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+function uploadVideo() {
+
+  cloudinary.openUploadWidget({
+
+    cloudName: "hvzksa0n",
+
+    uploadPreset: "smile_tv",
+
+    sources: ["local", "camera"],
+
+    multiple: false,
+
+    resourceType: "video"
+
+  }, function(error, result) {
+
+    if (!error && result && result.event === "success") {
+
+      const videoUrl = result.info.secure_url;
+
+      const video = document.getElementById("mainVideo");
+
+      video.src = videoUrl;
+
+      video.muted = false;
+
+      video.play();
+
+      alert("✅ Video imepakiwa kwenye Smile TV!");
+
+    }
+
+  });
+
+}
+
+
+function likeVideo() {
+
+  alert("❤️ Ume-like video!");
+
+}
+
+
+function commentVideo() {
+
+  const comment = prompt("Andika comment yako:");
+
+  if (comment) {
+
+    alert("💬 Comment yako imeongezwa!");
+
+  }
+
+}
+
+
+function shareVideo() {
+
+  const url = document.getElementById("mainVideo").src;
+
+  if (navigator.share) {
+
+    navigator.share({
+
+      title: "Smile TV",
+
+      text: "Tazama video hii kwenye Smile TV",
+
+      url: url
+
+    });
+
+  } else {
+
+    navigator.clipboard.writeText(url);
+
+    alert("🔗 Link ya video imenakiliwa!");
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
