@@ -104,7 +104,65 @@
 </head>
 
 <body>
+<div id="loginBox" style="
+  position:fixed;
+  inset:0;
+  background:#000;
+  color:#fff;
+  z-index:99999;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  text-align:center;
+">
+  <h1>😊 Smile TV</h1>
+  <h3>Ingia kwenye Smile TV</h3>
 
+  <input
+    id="phoneNumber"
+    type="tel"
+    placeholder="+2557XXXXXXXX"
+    style="padding:14px;width:90%;max-width:330px;border-radius:10px;border:0;margin:10px;"
+  >
+
+  <div id="recaptcha-container"></div>
+
+  <button onclick="sendCode()" style="
+    padding:13px 25px;
+    border:0;
+    border-radius:25px;
+    background:#ff0050;
+    color:white;
+    font-weight:bold;
+    margin:10px;
+  ">
+    📩 Tuma Code
+  </button>
+
+  <input
+    id="verificationCode"
+    type="number"
+    placeholder="Ingiza OTP"
+    style="padding:14px;width:90%;max-width:330px;border-radius:10px;border:0;margin:10px;display:none;"
+  >
+
+  <button id="verifyBtn" onclick="verifyCode()" style="
+    padding:13px 25px;
+    border:0;
+    border-radius:25px;
+    background:#19c96b;
+    color:white;
+    font-weight:bold;
+    margin:10px;
+    display:none;
+  ">
+    ✅ Thibitisha
+  </button>
+
+  <p id="loginMessage"></p>
+</div>
 <div class="app">
 
   <div class="logo">😊 Smile TV</div>
