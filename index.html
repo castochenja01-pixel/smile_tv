@@ -1,619 +1,94 @@
 <!DOCTYPE html>
-<html lang="sw">
-
+<html>
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Smile TV</title>
-
-<script src="https://upload-widget.cloudinary.com/global/all.js"></script>
-
-
-<style>
-
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
-
-
-body{
-
-background:#000;
-
-color:white;
-
-font-family:Arial,sans-serif;
-
-overflow:hidden;
-
-}
-
-
-
-#app{
-
-width:100%;
-
-height:100vh;
-
-}
-
-
-
-.logo{
-
-position:fixed;
-
-top:20px;
-
-left:20px;
-
-z-index:10;
-
-font-size:25px;
-
-font-weight:bold;
-
-}
-
-
-
-.upload{
-
-position:fixed;
-
-top:15px;
-
-right:15px;
-
-z-index:10;
-
-background:#ff0050;
-
-color:white;
-
-border:0;
-
-padding:12px 20px;
-
-border-radius:30px;
-
-font-weight:bold;
-
-}
-
-
-
-.video-box{
-
-width:100%;
-
-height:100vh;
-
-position:relative;
-
-}
-
-
-
-video{
-
-width:100%;
-
-height:100%;
-
-object-fit:cover;
-
-background:#111;
-
-}
-
-
-
-.info{
-
-position:absolute;
-
-bottom:40px;
-
-left:15px;
-
-}
-
-
-
-.username{
-
-font-size:20px;
-
-font-weight:bold;
-
-}
-
-
-
-.caption{
-
-margin-top:8px;
-
-}
-
-
-
-.buttons{
-
-position:absolute;
-
-right:15px;
-
-bottom:120px;
-
-display:flex;
-
-flex-direction:column;
-
-gap:15px;
-
-}
-
-
-
-.action{
-
-width:55px;
-
-height:55px;
-
-border-radius:50%;
-
-border:0;
-
-background:#0008;
-
-color:white;
-
-font-size:22px;
-
-}
-
-
-
-#loginBox{
-
-position:fixed;
-
-inset:0;
-
-background:#000;
-
-z-index:99;
-
-display:flex;
-
-flex-direction:column;
-
-align-items:center;
-
-justify-content:center;
-
-}
-
-
-
-#loginBox button{
-
-padding:15px 25px;
-
-border:0;
-
-border-radius:25px;
-
-font-weight:bold;
-
-}
-
-
-
-</style>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-
-
-<body>
-
-
-<div id="loginBox">
+<body style="background:black;color:white;text-align:center;font-family:Arial">
 
 <h1>😊 Smile TV</h1>
+<p id="msg">Karibu Smile TV</p>
 
-<p>Karibu Smile TV</p>
-
-
-<button onclick="googleLogin()">
-
+<button onclick="login()" style="
+padding:15px 25px;
+border-radius:25px;
+border:0;
+font-size:16px;
+">
 🔐 Ingia kwa Google
-
 </button>
 
 
-<p id="loginMessage"></p>
+<script type="module">
 
-
-</div>
-
-
-
-<div id="app">
-
-
-<div class="logo">
-
-😊 Smile TV
-
-</div>
-
-
-<button class="upload">
-
-⬆️ Upload
-
-</button>
-
-
-
-<div class="video-box">
-
-
-<video id="mainVideo" controls autoplay loop playsinline></video>
-
-
-
-<div class="info">
-
-<div class="username">
-
-@SmileTV
-
-</div>
-
-
-<div class="caption">
-
-Karibu Smile TV 🎬
-
-</div>
-
-
-</div>
-
-
-
-
-<div class="buttons">
-
-
-<button class="action">
-
-❤️
-
-</button>
-
-
-<button class="action">
-
-💬
-
-</button>
-
-
-<button class="action">
-
-↗️
-
-</button>
-
-
-
-</div>
-
-
-</div>
-
-
-</div><script type="module">
-
-import { initializeApp }
+import { initializeApp } 
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
 
 import {
 getAuth,
 GoogleAuthProvider,
-signInWithPopup,
-onAuthStateChanged
+signInWithPopup
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 
-import {
-getFirestore,
-collection,
-addDoc,
-getDocs,
-query,
-orderBy
-}
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+// WEKA CONFIG YAKO HAPA
+
 const firebaseConfig = {
 
-apiKey: "AIzaSyCu5afNJaHts8CSUGnwJg-TgRZzHBMH0eU",
-  authDomain: "smile-tv-1d3a1.firebaseapp.com",
-  projectId: "smile-tv-1d3a1",
-  storageBucket: "smile-tv-1d3a1.firebasestorage.app",
-  messagingSenderId: "873816908067",
-  appId: "1:873816908067:web:01a899081383a74e55ec96"
+apiKey:"WEKA_API_KEY",
 
+authDomain:"WEKA_AUTH_DOMAIN",
+
+projectId:"WEKA_PROJECT_ID",
+
+storageBucket:"WEKA_STORAGE_BUCKET",
+
+messagingSenderId:"WEKA_MESSAGING_ID",
+
+appId:"WEKA_APP_ID"
+
+};
 
 
 const app = initializeApp(firebaseConfig);
 
-
 const auth = getAuth(app);
-
-
-const db = getFirestore(app);
-
 
 const provider = new GoogleAuthProvider();
 
 
 
-// GOOGLE LOGIN
+window.login = async function(){
 
-window.googleLogin = async function(){
-alert("Kitufe kinafanya kazi");
+let msg=document.getElementById("msg");
+
+msg.innerHTML="Inaingia...";
+
 
 try{
 
-
 await signInWithPopup(auth,provider);
+
+msg.innerHTML="✅ Umeingia Smile TV";
 
 
 }
 
 catch(error){
 
+msg.innerHTML="❌ "+error.message;
 
-document.getElementById("loginMessage").innerHTML =
-"❌ "+error.message;
-
+console.log(error);
 
 }
 
 
 };
-
-
-
-
-// CHECK USER
-
-onAuthStateChanged(auth,(user)=>{
-
-
-if(user){
-
-
-document.getElementById("loginBox").style.display="none";
-
-
-console.log("Ameingia:",user.email);
-
-
-loadVideos();
-
-
-}
-
-
-});
-
-
-
-
-// HIFADHI VIDEO FIRESTORE
-
-window.saveVideo = async function(videoUrl){
-
-
-const user = auth.currentUser;
-
-
-if(!user){
-
-return;
-
-}
-
-
-await addDoc(
-
-collection(db,"videos"),
-
-{
-
-videoUrl:videoUrl,
-
-user:user.email,
-
-createdAt:Date.now()
-
-}
-
-);
-
-
-};
-
-
-
-
-// SOMA VIDEO
-
-async function loadVideos(){
-
-
-const q = query(
-
-collection(db,"videos"),
-
-orderBy("createdAt","desc")
-
-);
-
-
-
-const data = await getDocs(q);
-
-
-
-data.forEach((doc)=>{
-
-
-let videoData = doc.data();
-
-
-document.getElementById("mainVideo").src =
-videoData.videoUrl;
-
-
-});
-
-
-}
-
-
-
-</script><script>
-
-document.querySelector(".upload").onclick = function(){
-
-
-cloudinary.openUploadWidget({
-
-cloudName:"hvzksa0n",
-
-uploadPreset:"smile_tv",
-
-sources:["local","camera"],
-
-multiple:false,
-
-resourceType:"video"
-
-
-}, async function(error,result){
-
-
-
-if(!error && result.event==="success"){
-
-
-const videoUrl = result.info.secure_url;
-
-
-
-document.getElementById("mainVideo").src = videoUrl;
-
-
-document.getElementById("mainVideo").play();
-
-
-
-// hifadhi Firestore
-
-if(window.saveVideo){
-
-await window.saveVideo(videoUrl);
-
-}
-
-
-
-alert("✅ Video imepakiwa Smile TV");
-
-
-}
-
-
-
-});
-
-
-};
-
-
-
-
-// LIKE
-
-document.querySelectorAll(".action")[0].onclick=function(){
-
-alert("❤️ Ume-like video");
-
-};
-
-
-
-
-// COMMENT
-
-document.querySelectorAll(".action")[1].onclick=function(){
-
-let comment = prompt("Andika comment yako:");
-
-if(comment){
-
-alert("💬 Comment imeongezwa");
-
-}
-
-};
-
-
-
-
-// SHARE
-
-document.querySelectorAll(".action")[2].onclick=function(){
-
-
-navigator.clipboard.writeText(
-
-document.getElementById("mainVideo").src
-
-);
-
-
-alert("🔗 Link imenakiliwa");
-
-
-};
-
 
 
 </script>
 
-
 </body>
-
 </html>
-
-
-Get Microsoft OneNote: https://aka.ms/GetOneNoteMobile
