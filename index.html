@@ -1023,7 +1023,25 @@ alert(
 
 };
 
+document.getElementById("profileButton").onclick = function(){
 
+if(!currentUser){
+
+alert("Tafadhali ingia kwanza.");
+
+return;
+
+}
+
+alert(
+"👤 Profile\n\n" +
+"Jina: " +
+(currentUser.displayName || "Mtumiaji") +
+"\nEmail: " +
+currentUser.email
+);
+
+};
 /* =========================
 AUTO PLAY
 ========================= */
