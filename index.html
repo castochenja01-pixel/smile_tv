@@ -1023,7 +1023,7 @@ alert(
 
 };
 
-document.getElementById("profileButton").onclick = function(){
+document.getElementById("profileButton")?.addEventListener("click", function(){
 
 if(!currentUser){
 
@@ -1041,7 +1041,7 @@ alert(
 currentUser.email
 );
 
-};
+});
 /* =========================
 AUTO PLAY
 ========================= */
