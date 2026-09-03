@@ -636,7 +636,8 @@ preload="metadata">
 
 <div class="info">
 
-<div class="username">
+<div class="username profileLink"
+data-user="${escapeHTML(data.user || "")}">
 @${escapeHTML(
 data.username ||
 getUsername(data.user)
