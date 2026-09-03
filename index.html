@@ -712,7 +712,33 @@ openUserProfile(data.user);
 
 };
 }
+function openUserProfile(userEmail){
 
+if(!userEmail){
+
+alert("Mtumiaji huyu hajapatikana.");
+
+return;
+
+}
+
+document.getElementById("feed").style.display = "none";
+
+document.getElementById("profilePage").style.display = "block";
+
+document.getElementById("profileName").textContent =
+userEmail.split("@")[0];
+
+document.getElementById("profileEmail").textContent =
+userEmail;
+
+document.getElementById("profilePhoto").src = "";
+
+document.getElementById("followersCount").textContent = "0";
+
+document.getElementById("followingCount").textContent = "0";
+
+}
 
 /* =========================
 LIKE
