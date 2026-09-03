@@ -1099,10 +1099,12 @@ alert(
 
 };
 
-document.getElementById("profileButton")?.addEventListener("click", function(){
-document.addEventListener("click", function(e){
+/* =========================
+PROFILE
+========================= */
 
-if(e.target.closest("#profileButton")){
+document.getElementById("profileButton").onclick =
+function(){
 
 if(!currentUser){
 
@@ -1112,9 +1114,11 @@ return;
 
 }
 
-document.getElementById("feed").style.display = "none";
+document.getElementById("feed").style.display =
+"none";
 
-document.getElementById("profilePage").style.display = "block";
+document.getElementById("profilePage").style.display =
+"block";
 
 document.getElementById("profilePhoto").src =
 currentUser.photoURL || "";
@@ -1124,7 +1128,26 @@ currentUser.displayName || "Mtumiaji";
 
 document.getElementById("profileEmail").textContent =
 currentUser.email || "";
-});
+
+};
+
+
+/* =========================
+BACK TO FEED
+========================= */
+
+document.getElementById("backToFeed").onclick =
+function(){
+
+document.getElementById("profilePage").style.display =
+"none";
+
+document.getElementById("feed").style.display =
+"block";
+
+};
+
+  
 /* =========================
 AUTO PLAY
 ========================= */
