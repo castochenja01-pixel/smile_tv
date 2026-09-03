@@ -1109,13 +1109,18 @@ return;
 
 }
 
-alert(
-"👤 Profile\n\n" +
-"Jina: " +
-(currentUser.displayName || "Mtumiaji") +
-"\nEmail: " +
-currentUser.email
-);
+document.getElementById("feed").style.display = "none";
+
+document.getElementById("profilePage").style.display = "block";
+
+document.getElementById("profilePhoto").src =
+currentUser.photoURL || "";
+
+document.getElementById("profileName").textContent =
+currentUser.displayName || "Mtumiaji";
+
+document.getElementById("profileEmail").textContent =
+currentUser.email || "";
 
 });
 /* =========================
